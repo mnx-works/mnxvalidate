@@ -44,9 +44,6 @@ if(mnxvalidate_BUILD_TESTING)
     # Define testing-specific preprocessor macro
     target_compile_definitions(mnxvalidate_tests PRIVATE MNXVALIDATE_TEST)
 
-    # Add test dependencies
-    add_dependencies(mnxvalidate_tests GenerateMnxSchemaXxd)
-
     # Add Google Test as a dependency
     FetchContent_Declare(
         googletest
