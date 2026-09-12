@@ -20,8 +20,6 @@ jobs:
             generator: Ninja
           - os: macos-latest
             generator: Ninja
-          - os: windows-latest
-            generator: "Visual Studio 17 2022"
 
     steps:
       # Checkout the repository with submodules
@@ -54,10 +52,10 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: cmake -G "${{ matrix.generator }}" -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-      # Configure on Windows
+      # Configure on Windows (default generator picks the installed Visual Studio)
       - name: Configure with CMake on Windows
         if: matrix.os == 'windows-latest'
-        run: cmake -G "${{ matrix.generator }}" -S . -B build
+        run: cmake -S . -B build
 
       # Build on Linux and macOS
       - name: Build on Linux and macOS
