@@ -21,7 +21,9 @@
  */
 #include <iostream>
 #include <array>
-#include <iterator>
+#include <span>
+#include <string_view>
+#include <utility>
 
 #include "mnxvalidate.h"
 
@@ -37,11 +39,11 @@ namespace json_schema {
 }
 }
 
-constexpr std::basic_string_view<unsigned char> mnxvalidateLicense(mnxvalidate::LICENSE, std::size(mnxvalidate::LICENSE));
-constexpr std::basic_string_view<unsigned char> nlohmannLicense(nlohmann::LICENSE_MIT, std::size(nlohmann::LICENSE_MIT));
-constexpr std::basic_string_view<unsigned char> jsonSchemaValidatorLicense(nlohmann::json_schema::LICENSE, std::size(nlohmann::json_schema::LICENSE));
+constexpr std::span<const unsigned char> mnxvalidateLicense(mnxvalidate::LICENSE);
+constexpr std::span<const unsigned char> nlohmannLicense(nlohmann::LICENSE_MIT);
+constexpr std::span<const unsigned char> jsonSchemaValidatorLicense(nlohmann::json_schema::LICENSE);
 
-constexpr auto licenses = std::to_array<std::pair<std::string_view, std::basic_string_view<unsigned char>>>({
+constexpr auto licenses = std::to_array<std::pair<std::string_view, std::span<const unsigned char>>>({
     { "mnxvalidate", mnxvalidateLicense },
     { "nlohmann json", nlohmannLicense },
     { "json schema validator", jsonSchemaValidatorLicense },
