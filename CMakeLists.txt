@@ -108,7 +108,7 @@ option(mnxdom_BUILD_TESTING "Enable testing mnxdom" ON)
 # Fetch mnxdom
 FetchContent_Declare(
     mnxdom
-    GIT_REPOSITORY https://github.com/rpatters1/mnxdom.git
+    GIT_REPOSITORY https://github.com/mnx-works/mnxdom.git
     GIT_TAG        ${MNXDOM_GIT_TAG_OR_BRANCH}
     DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
