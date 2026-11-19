@@ -21,10 +21,12 @@
  */
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 
 #include "mnxvalidate.h"
 #include "mnxdom.h"
+#include "validation/Validation.h"
 
 namespace mnxvalidate {
 
@@ -220,15 +222,16 @@ void MnxValidateContext::endLogging()
     }
 }
 
-static bool validateJsonAgainstSchema(const std::filesystem::path& jsonFilePath, const MnxValidateContext& context)
+using SchemaValidationResult = mnx::validation::SchemaValidationResult;
+static std::optional<SchemaValidationResult> validateJsonAgainstSchema(const std::filesystem::path& jsonFilePath, const MnxValidateContext& context)
 {
     try {
         auto doc = std::make_unique<mnx::Document>(mnx::Document::create(jsonFilePath));
-        auto validateResult = mnx::validation::schemaValidate(*doc, context.mnxSchema);
+        auto validateResult = mnx::validation::schemaValidate(*doc, {.collectIds = !context.schemaOnly, .jsonSchema = context.mnxSchema});
         if (validateResult) {
             context.logMessage(LogMsg() << "Schema validation succeeded.");
             context.mnxDoc = std::move(doc);
-            return true;
+            return validateResult;
         }
         context.logMessage(LogMsg() << "Validation errors:", LogSeverity::Error);
         for (const auto& error : validateResult.errors) {
@@ -238,7 +241,7 @@ static bool validateJsonAgainstSchema(const std::filesystem::path& jsonFilePath,
         context.logMessage(LogMsg() << "Parsing error: " << e.what(), LogSeverity::Error);
     }
     context.logMessage(LogMsg() << "Schema validation failed.", LogSeverity::Error);
-    return false;
+    return std::nullopt;
 }
 
 void MnxValidateContext::processFile(const std::filesystem::path inpFilePath) const
@@ -257,9 +260,9 @@ void MnxValidateContext::processFile(const std::filesystem::path inpFilePath) co
         logMessage(LogMsg() << delimiter, true);
         resetForFile(inpFilePath); // reset after logging the header
 
-        bool success = validateJsonAgainstSchema(inputFilePath, *this); // side-effect: validateJsonAgainstSchema creates the mnxDocument
-        if (success && !schemaOnly) {
-            auto result = mnx::validation::semanticValidate(*mnxDoc);
+        auto validation = validateJsonAgainstSchema(inputFilePath, *this); // side-effect: validateJsonAgainstSchema creates the mnxDocument
+        if (validation && !schemaOnly && validation->ids.has_value()) {
+            auto result = mnx::validation::semanticValidate(*mnxDoc, validation->ids.value());
             if (result) {
                 size_t layoutSize = mnxDoc->layouts() ? mnxDoc->layouts().value().size() : 0;
                 logMessage(LogMsg() << "Semantic validation complete (" << mnxDoc->global().measures().size() << " measures, "

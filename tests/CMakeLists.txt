@@ -15,6 +15,7 @@ if(mnxvalidate_BUILD_TESTING)
         test_logging.cpp
         ${MNXVALIDATE_SOURCES}
     )
+    add_dependencies(mnxvalidate_tests GenerateLicenseXxd)
 
     if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU")
         # Extra warnings for Clang/AppleClang

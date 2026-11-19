@@ -33,20 +33,20 @@ namespace mnxvalidate {
 
 namespace nlohmann {
 #include "nlohmann_json_license.xxd"
-namespace json_schema {
-#include "json_schema_validator_license.xxd"
-
 }
+
+namespace json_schema_cpp {
+#include "json_schema_cpp_license.xxd"
 }
 
 constexpr std::span<const unsigned char> mnxvalidateLicense(mnxvalidate::LICENSE);
 constexpr std::span<const unsigned char> nlohmannLicense(nlohmann::LICENSE_MIT);
-constexpr std::span<const unsigned char> jsonSchemaValidatorLicense(nlohmann::json_schema::LICENSE);
+constexpr std::span<const unsigned char> jsonSchemaCppLicense(json_schema_cpp::LICENSE);
 
 constexpr auto licenses = std::to_array<std::pair<std::string_view, std::span<const unsigned char>>>({
     { "mnxvalidate", mnxvalidateLicense },
     { "nlohmann json", nlohmannLicense },
-    { "json schema validator", jsonSchemaValidatorLicense },
+    { "json-schema-cpp", jsonSchemaCppLicense },
 });
 
 namespace mnxvalidate {
