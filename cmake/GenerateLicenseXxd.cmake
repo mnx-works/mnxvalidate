@@ -1,17 +1,18 @@
 # GenerateLicenseXxd.cmake
 
+FetchContent_GetProperties(json_schema_cpp)
 
 # Define parallel lists for file paths and their corresponding prefixes
 set(LICENSE_FILES
     "${CMAKE_SOURCE_DIR}/LICENSE"
     "${nlohmann_json_SOURCE_DIR}/LICENSE.MIT"
-    "${nlohmann_json_schema_validator_SOURCE_DIR}/LICENSE"
+    "${json_schema_cpp_SOURCE_DIR}/LICENSE"
 )
 
 set(LICENSE_PREFIXES
     mnxvalidate
     nlohmann_json
-    json_schema_validator
+    json_schema_cpp
 )
 
 # Ensure both lists have the same length
